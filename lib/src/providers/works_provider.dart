@@ -228,7 +228,6 @@ class WorksNotifier extends StateNotifier<WorksState> {
       Map<String, dynamic> response;
 
       final pageSize = state.pageSize;
-      final subtitleFilter = state.subtitleFilter;
       final sortOption = state.sortOption;
       final sortDirection = state.sortDirection;
 
@@ -422,6 +421,8 @@ class WorksNotifier extends StateNotifier<WorksState> {
     }
   }
 
+  bool get isSubtitleFilterActive => state.subtitleFilter == 1;
+
   // Toggle subtitle filter
   void toggleSubtitleFilter() {
     final currentPage = state.currentPage;
@@ -538,7 +539,7 @@ final worksProvider = StateNotifierProvider<WorksNotifier, WorksState>((ref) {
 
   // 监听本地字幕库变化，当字幕筛选开启时重新过滤
   ref.listen(subtitleLibraryProvider, (previous, next) {
-    if (previous != next && notifier.state.subtitleFilter == 1) {
+    if (previous != next && notifier.isSubtitleFilterActive) {
       notifier.reapplyFilters();
     }
   });

@@ -14,7 +14,7 @@ jobs:
     name: Android Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Prepare Android Signing
         env:
@@ -66,7 +66,7 @@ jobs:
           mv build/app/outputs/flutter-apk/app-x86_64-release.apk build/app/outputs/flutter-apk/KikoFlu-android-x86_64-release.apk
           
       - name: Upload Android Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: android-release
           path: |
@@ -79,7 +79,7 @@ jobs:
     name: Windows Build
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -122,7 +122,7 @@ jobs:
           directory: 'build/windows/x64/runner/Release'
 
       - name: Upload Windows Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: windows-release
           path: |
@@ -133,7 +133,7 @@ jobs:
     name: iOS Build (Unsigned)
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -174,7 +174,7 @@ jobs:
           zip -qr KikoFlu-ios-unsigned.ipa Payload
           
       - name: Upload iOS Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ios-unsigned-release
           path: build/KikoFlu-ios-unsigned.ipa
@@ -183,7 +183,7 @@ jobs:
     name: macOS Build
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -206,7 +206,7 @@ jobs:
             KikoFlu-macos.dmg
             
       - name: Upload macOS Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: macos-release
           path: KikoFlu-macos.dmg

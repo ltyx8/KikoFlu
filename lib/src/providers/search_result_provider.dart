@@ -289,6 +289,8 @@ class SearchResultNotifier extends StateNotifier<SearchResultState> {
     state = state.copyWith(layoutType: nextLayout);
   }
 
+  bool get isSubtitleFilterActive => state.subtitleFilter == 1;
+
   void toggleSubtitleFilter() {
     final currentPage = state.currentPage;
     final oldFilter = state.subtitleFilter;
@@ -349,7 +351,7 @@ final searchResultProvider =
 
   // 监听本地字幕库变化，当字幕筛选开启时重新过滤
   ref.listen(subtitleLibraryProvider, (previous, next) {
-    if (previous != next && notifier.state.subtitleFilter == 1) {
+    if (previous != next && notifier.isSubtitleFilterActive) {
       notifier.reapplyFilters();
     }
   });
