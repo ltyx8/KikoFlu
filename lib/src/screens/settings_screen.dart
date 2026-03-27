@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../l10n/app_localizations.dart';
 import 'dart:io';
 
 import 'account_management_screen.dart';
@@ -11,6 +12,7 @@ import 'about_screen.dart';
 import 'permissions_screen.dart';
 import 'privacy_mode_settings_screen.dart';
 import 'floating_lyric_style_screen.dart';
+import '../providers/locale_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/update_provider.dart';
 import '../providers/floating_lyric_provider.dart';
@@ -27,7 +29,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  String _cacheSize = '计算中...';
+  String _cacheSize = '';
   bool _isUpdatingCacheSize = false;
   ScaffoldMessengerState? _scaffoldMessenger;
 
@@ -108,7 +110,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     if (mounted) {
       setState(() {
-        _cacheSize = '计算中...';
+        _cacheSize = S.of(context).calculating;
       });
     }
 
@@ -122,7 +124,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     } catch (_) {
       if (mounted) {
         setState(() {
-          _cacheSize = '获取失败';
+          _cacheSize = S.of(context).fetchFailed;
         });
       }
     } finally {
@@ -150,8 +152,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     return Scaffold(
       floatingActionButton: const DownloadFab(),
-      appBar: const ScrollableAppBar(
-        title: Text('设置', style: TextStyle(fontSize: 18)),
+      appBar: ScrollableAppBar(
+        title: Text(S.of(context).settingsTitle, style: const TextStyle(fontSize: 18)),
       ),
       body: isLandscape
           ? _buildLandscapeLayout(cards)
@@ -215,8 +217,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ListTile(
             leading: Icon(Icons.manage_accounts,
                 color: Theme.of(context).colorScheme.primary),
-            title: const Text('账户管理'),
-            subtitle: const Text('多账户管理,切换账户'),
+            title: Text(S.of(context).accountManagement),
+            subtitle: Text(S.of(context).accountManagementSubtitle),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.of(context).push(
@@ -230,9 +232,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ListTile(
             leading: Icon(Icons.privacy_tip_outlined,
                 color: Theme.of(context).colorScheme.primary),
-            title: const Text('防社死模式'),
+            title: Text(S.of(context).privacyMode),
             subtitle: Text(
-              privacySettings.enabled ? '已启用 - 播放信息已隐藏' : '未启用',
+              privacySettings.enabled ? S.of(context).privacyModeEnabled : S.of(context).privacyModeDisabled,
             ),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
@@ -258,8 +260,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ListTile(
               leading: Icon(Icons.security,
                   color: Theme.of(context).colorScheme.primary),
-              title: const Text('权限管理'),
-              subtitle: const Text('通知权限、后台运行权限'),
+              title: Text(S.of(context).permissionManagement),
+              subtitle: Text(S.of(context).permissionManagementSubtitle),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 Navigator.of(context).push(
@@ -286,9 +288,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             Icons.subtitles_outlined,
             color: Theme.of(context).colorScheme.primary,
           ),
-          title: const Text('桌面悬浮字幕'),
+          title: Text(S.of(context).desktopFloatingLyric),
           subtitle: Text(
-            isEnabled ? '已启用 - 字幕将显示在桌面上' : '未启用',
+            isEnabled ? S.of(context).floatingLyricEnabled : S.of(context).privacyModeDisabled,
             style: TextStyle(
               color: isEnabled
                   ? Theme.of(context).colorScheme.primary.withOpacity(0.8)
@@ -303,7 +305,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               if (mounted) {
                 SnackBarUtil.showError(
                   context,
-                  '操作失败: $e',
+                  S.of(context).operationFailedWithError(e.toString()),
                 );
               }
             }
@@ -317,8 +319,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           ListTile(
             leading: const SizedBox(width: 24), // 占位对齐
-            title: const Text('样式设置'),
-            subtitle: const Text('自定义字体、颜色、透明度等'),
+            title: Text(S.of(context).styleSettings),
+            subtitle: Text(S.of(context).styleSettingsSubtitle),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
               Navigator.of(context).push(
@@ -340,8 +342,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ListTile(
             leading: Icon(Icons.folder_outlined,
                 color: Theme.of(context).colorScheme.primary),
-            title: const Text('下载路径'),
-            subtitle: const Text('自定义下载文件保存位置'),
+            title: Text(S.of(context).downloadPath),
+            subtitle: Text(S.of(context).downloadPathSubtitle),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.of(context).push(
@@ -355,14 +357,48 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ListTile(
             leading: Icon(Icons.storage,
                 color: Theme.of(context).colorScheme.primary),
-            title: const Text('缓存管理'),
-            subtitle: Text('当前缓存: $_cacheSize'),
+            title: Text(S.of(context).cacheManagement),
+            subtitle: Text('${S.of(context).currentCache}: $_cacheSize'),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               _showCacheManagementDialog();
             },
           ),
         ],
+      ),
+    );
+  }
+
+  void _showLanguagePicker(BuildContext context, WidgetRef ref) {
+    final currentLocale = ref.read(localeProvider);
+    final options = <(String, Locale?)>[
+      (S.of(context).languageSystem, null),
+      (S.of(context).languageZh, const Locale('zh')),
+      (S.of(context).languageZhTw,
+          const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant')),
+      (S.of(context).languageEn, const Locale('en')),
+      (S.of(context).languageJa, const Locale('ja')),
+      (S.of(context).languageRu, const Locale('ru')),
+    ];
+
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text(S.of(context).settingsLanguage),
+        children: options.map((option) {
+          final (label, locale) = option;
+          return RadioListTile<int>(
+            title: Text(label),
+            value: options.indexOf(option),
+            groupValue: options.indexWhere((o) =>
+                o.$2?.languageCode == currentLocale?.languageCode &&
+                o.$2?.scriptCode == currentLocale?.scriptCode),
+            onChanged: (_) {
+              ref.read(localeProvider.notifier).setLocale(locale);
+              Navigator.of(context).pop();
+            },
+          );
+        }).toList(),
       ),
     );
   }
@@ -374,8 +410,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ListTile(
             leading: Icon(Icons.palette,
                 color: Theme.of(context).colorScheme.primary),
-            title: const Text('主题设置'),
-            subtitle: const Text('深色模式、主题色等'),
+            title: Text(S.of(context).themeSettings),
+            subtitle: Text(S.of(context).themeSettingsSubtitle),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.of(context).push(
@@ -386,11 +422,39 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             },
           ),
           Divider(color: Theme.of(context).colorScheme.outlineVariant),
+          Consumer(
+            builder: (context, ref, _) {
+              final currentLocale = ref.watch(localeProvider);
+              String localeLabel;
+              if (currentLocale == null) {
+                localeLabel = S.of(context).languageSystem;
+              } else if (currentLocale.scriptCode == 'Hant') {
+                localeLabel = S.of(context).languageZhTw;
+              } else {
+                localeLabel = switch (currentLocale.languageCode) {
+                  'zh' => S.of(context).languageZh,
+                  'en' => S.of(context).languageEn,
+                  'ja' => S.of(context).languageJa,
+                  'ru' => S.of(context).languageRu,
+                  _ => currentLocale.languageCode,
+                };
+              }
+              return ListTile(
+                leading: Icon(Icons.language,
+                    color: Theme.of(context).colorScheme.primary),
+                title: Text(S.of(context).settingsLanguage),
+                subtitle: Text(localeLabel),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () => _showLanguagePicker(context, ref),
+              );
+            },
+          ),
+          Divider(color: Theme.of(context).colorScheme.outlineVariant),
           ListTile(
             leading: Icon(Icons.dashboard_customize,
                 color: Theme.of(context).colorScheme.primary),
-            title: const Text('界面设置'),
-            subtitle: const Text('播放器、详情页、卡片等'),
+            title: Text(S.of(context).uiSettings),
+            subtitle: Text(S.of(context).uiSettingsSubtitle),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.of(context).push(
@@ -404,8 +468,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ListTile(
             leading:
                 Icon(Icons.tune, color: Theme.of(context).colorScheme.primary),
-            title: const Text('偏好设置'),
-            subtitle: const Text('翻译源、屏蔽、音频偏好等'),
+            title: Text(S.of(context).preferenceSettings),
+            subtitle: Text(S.of(context).preferenceSettingsSubtitle),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.of(context).push(
@@ -446,8 +510,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                   ],
                 ),
-                title: const Text('关于'),
-                subtitle: const Text('检查更新、许可证等'),
+                title: Text(S.of(context).aboutTitle),
+                subtitle: Text(S.of(context).aboutSubtitle),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -483,7 +547,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              '有新版本',
+                              S.of(context).hasNewVersion,
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
@@ -571,14 +635,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           builder: (context, setDialogState) => AlertDialog(
             title: Row(
               children: [
-                const Expanded(
-                  child: Text('缓存管理', style: TextStyle(fontSize: 18)),
+                Expanded(
+                  child: Text(S.of(context).cacheManagement, style: const TextStyle(fontSize: 18)),
                 ),
                 if (isLandscape)
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () => Navigator.of(context).pop(),
-                    tooltip: '关闭',
+                    tooltip: S.of(context).close,
                   ),
               ],
             ),
@@ -606,9 +670,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
-                                          '当前缓存大小',
-                                          style: TextStyle(
+                                        Text(
+                                          S.of(context).currentCacheSize,
+                                          style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -646,7 +710,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          '上限: ${currentLimit}MB',
+                                          S.of(context).cacheLimitLabelMB(currentLimit),
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Colors.grey[600],
@@ -668,9 +732,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
-                                          '使用率',
-                                          style: TextStyle(
+                                        Text(
+                                          S.of(context).cacheUsagePercent,
+                                          style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -725,9 +789,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // 缓存大小上限设置
-                                const Text(
-                                  '缓存大小上限',
-                                  style: TextStyle(
+                                Text(
+                                  S.of(context).cacheSizeLimit,
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -782,30 +846,28 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                     color: Colors.blue.withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: const Column(
+                                  child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
-                                          Icon(Icons.info_outline,
+                                          const Icon(Icons.info_outline,
                                               size: 16, color: Colors.blue),
-                                          SizedBox(width: 8),
+                                          const SizedBox(width: 8),
                                           Text(
-                                            '自动清理说明',
-                                            style: TextStyle(
+                                            S.of(context).autoCleanTitle,
+                                            style: const TextStyle(
                                               fontWeight: FontWeight.w500,
                                               color: Colors.blue,
                                             ),
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 8),
+                                      const SizedBox(height: 8),
                                       Text(
-                                        '• 当缓存超过上限时，会自动执行清理\n'
-                                        '• 删除直到缓存降低到上限的80%\n'
-                                        '• 按最近最少使用(LRU)策略删除',
-                                        style: TextStyle(fontSize: 12),
+                                        S.of(context).autoCleanDescription,
+                                        style: const TextStyle(fontSize: 12),
                                       ),
                                     ],
                                   ),
@@ -830,9 +892,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  '当前缓存大小',
-                                  style: TextStyle(
+                                Text(
+                                  S.of(context).currentCacheSize,
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -863,7 +925,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  '上限: ${currentLimit}MB',
+                                  S.of(context).cacheLimitLabelMB(currentLimit),
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey[600],
@@ -875,10 +937,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ),
                         const SizedBox(height: 16),
 
-                        // 缓存大小上限设置
-                        const Text(
-                          '缓存大小上限',
-                          style: TextStyle(
+                        Text(
+                          S.of(context).cacheSizeLimit,
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
@@ -939,7 +1000,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       size: 16, color: Colors.blue),
                                   SizedBox(width: 8),
                                   Text(
-                                    '自动清理说明',
+                                    S.of(context).autoCleanTitle,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: Colors.blue,
@@ -949,8 +1010,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               ),
                               SizedBox(height: 8),
                               Text(
-                                '• 当缓存超过上限时，会自动执行清理\n'
-                                '• 删除直到缓存降低到上限的80%\n',
+                                S.of(context).autoCleanDescriptionShort,
                                 style: TextStyle(fontSize: 12),
                               ),
                             ],
@@ -965,16 +1025,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('关闭'),
+                  child: Text(S.of(context).close),
                 ),
               ElevatedButton.icon(
                 onPressed: () async {
-                  // 确认清除缓存
                   final confirmed = await showDialog<bool>(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text('确认清除'),
-                      content: const Text('确定要清除所有缓存吗？此操作无法撤销。'),
+                      title: Text(S.of(context).confirmClear),
+                      content: Text(S.of(context).confirmClearCacheMessage),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),

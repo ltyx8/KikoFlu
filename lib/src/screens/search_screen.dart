@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../models/search_type.dart';
 import '../providers/auth_provider.dart';
 import '../providers/search_history_provider.dart';
+import '../utils/l10n_extensions.dart';
 import '../utils/server_utils.dart';
 import '../utils/snackbar_util.dart';
 import '../widgets/scrollable_appbar.dart';
@@ -213,7 +215,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
       'keyword': searchKeyword,
       'conditions': _searchConditions
           .map((c) => {
-                'type': c.type.label,
+                'type': c.type.localizedLabel(context),
                 'value': c.value,
                 'isExclude': c.isExclude,
               })
@@ -225,7 +227,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
       searchParams['minRate'] = _minRate;
     }
     if (_ageRating != AgeRating.all) {
-      searchParams['ageRating'] = _ageRating.label;
+      searchParams['ageRating'] = _ageRating.localizedLabel(context);
     }
     if (_salesRange != SalesRange.all) {
       searchParams['salesRange'] = _salesRange.label;
@@ -233,9 +235,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
 
     // 构建可读的显示文本
     final displayParts = _searchConditions.map((c) {
-      final prefix = c.isExclude ? '排除 ' : '';
+      final prefix = c.isExclude ? '${S.of(context).excludeMode} ' : '';
       final value = c.type == SearchType.rjNumber ? 'RJ${c.value}' : c.value;
-      return '$prefix${c.type.label}: $value';
+      return '$prefix${c.type.localizedLabel(context)}: $value';
     }).toList();
     final displayText = displayParts.join(', ');
 
@@ -379,14 +381,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                   Row(
                     children: [
                       Text(
-                        '高级筛选',
+                        S.of(context).advancedFilter,
                         style: theme.textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
                       IconButton(
                         icon: const Icon(Icons.close),
-                        tooltip: '隐藏高级筛选',
+                        tooltip: S.of(context).close,
                         onPressed: () {
                           setState(() {
                             _showAdvancedFilters = false;
@@ -415,7 +417,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
     return [
       if (_searchConditions.isNotEmpty) ...[
         Text(
-          '搜索条件',
+          S.of(context).filter,
           style: theme.textTheme.titleSmall,
         ),
         const SizedBox(height: 6),
@@ -443,7 +445,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                     size: 16,
                   ),
                   label: Text(
-                    '${condition.type.label}: $displayValue',
+                    '${condition.type.localizedLabel(context)}: $displayValue',
                     style: const TextStyle(fontSize: 12),
                   ),
                   backgroundColor: condition.isExclude
@@ -465,7 +467,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
         const SizedBox(height: 12),
       ],
       Text(
-        '添加搜索条件',
+        S.of(context).search,
         style: theme.textTheme.titleSmall,
       ),
       const SizedBox(height: 8),
@@ -491,7 +493,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                           color: theme.colorScheme.onErrorContainer,
                         )
                       : null,
-                  label: Text(type.label),
+                  label: Text(type.localizedLabel(context)),
                   selected: isCurrentType,
                   showCheckmark:
                       !(isCurrentType && _isExcludeMode && supportsExclude),
@@ -548,8 +550,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
               Expanded(
                 child: Text(
                   _isExcludeMode
-                      ? '当前为排除模式：将排除包含该${_currentSearchType.label}的作品'
-                      : '提示：再次点击"${_currentSearchType.label}"可切换为排除模式',
+                      ? '${S.of(context).excludeMode}: ${_currentSearchType.localizedLabel(context)}'
+                      : '${S.of(context).includeMode}: ${_currentSearchType.localizedLabel(context)}',
                   style: TextStyle(
                     fontSize: 12,
                     color: _isExcludeMode
@@ -625,7 +627,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                         controller: controller,
                         focusNode: focusNode,
                         decoration: InputDecoration(
-                          hintText: _currentSearchType.hint,
+                          hintText: _currentSearchType.localizedHint(context),
                           prefixIcon: const Icon(Icons.search),
                           suffixIcon: _isLoadingSuggestions
                               ? const Padding(
@@ -659,7 +661,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                 : TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
-                      hintText: _currentSearchType.hint,
+                      hintText: _currentSearchType.localizedHint(context),
                       prefixIcon: const Icon(Icons.search),
                       prefixText: _currentSearchType == SearchType.rjNumber
                           ? 'RJ'
@@ -694,7 +696,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
             child: FilledButton.icon(
               onPressed: _addSearchCondition,
               icon: const Icon(Icons.add),
-              label: const Text('添加'),
+              label: Text(S.of(context).add),
             ),
           ),
         ],
@@ -712,8 +714,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
           icon: const Icon(Icons.search),
           label: Text(
             _searchConditions.isEmpty
-                ? '请先添加搜索条件'
-                : '搜索 (${_searchConditions.length} 个条件)',
+                ? S.of(context).enterSearchContent
+                : '${S.of(context).search} (${_searchConditions.length})',
           ),
         ),
       ),
@@ -740,7 +742,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '搜索历史',
+            S.of(context).searchHistory,
             style: theme.textTheme.titleSmall,
           ),
           TextButton.icon(
@@ -748,26 +750,26 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('清空搜索历史'),
-                  content: const Text('确定要清空所有搜索历史记录吗？'),
+                  title: Text(S.of(context).clearSearchHistory),
+                  content: Text(S.of(context).clearSearchHistoryConfirm),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('取消'),
+                      child: Text(S.of(context).cancel),
                     ),
                     FilledButton(
                       onPressed: () {
                         ref.read(searchHistoryProvider.notifier).clearHistory();
                         Navigator.pop(context);
                       },
-                      child: const Text('确定'),
+                      child: Text(S.of(context).confirm),
                     ),
                   ],
                 ),
               );
             },
             icon: const Icon(Icons.delete_outline, size: 18),
-            label: const Text('清空'),
+            label: Text(S.of(context).clear),
             style: TextButton.styleFrom(
               visualDensity: VisualDensity.compact,
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -813,7 +815,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
               onPressed: () {
                 ref.read(searchHistoryProvider.notifier).removeHistory(item.id);
               },
-              tooltip: '删除',
+              tooltip: S.of(context).delete,
             ),
             contentPadding: EdgeInsets.zero,
             visualDensity: VisualDensity.compact,
@@ -830,13 +832,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
     final diff = now.difference(timestamp);
 
     if (diff.inMinutes < 1) {
-      return '刚刚';
+      return 'just now';
     } else if (diff.inHours < 1) {
-      return '${diff.inMinutes} 分钟前';
+      return '${diff.inMinutes}m ago';
     } else if (diff.inDays < 1) {
-      return '${diff.inHours} 小时前';
+      return '${diff.inHours}h ago';
     } else if (diff.inDays < 7) {
-      return '${diff.inDays} 天前';
+      return '${diff.inDays}d ago';
     } else {
       return '${timestamp.month}/${timestamp.day}';
     }
@@ -858,7 +860,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '最低评分: ${_minRate.toStringAsFixed(2)} 星',
+                    '${S.of(context).minRating}: ${S.of(context).minRatingStars(_minRate.toStringAsFixed(2))}',
                     style: theme.textTheme.bodyMedium,
                   ),
                   Slider(
@@ -882,7 +884,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
             child: DropdownButtonFormField<AgeRating>(
               value: _ageRating,
               decoration: InputDecoration(
-                labelText: '年龄分级',
+                labelText: S.of(context).ageRatingLabel,
                 prefixIcon: const Icon(Icons.shield),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -900,7 +902,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                   .map((rating) {
                 return DropdownMenuItem(
                   value: rating,
-                  child: Text(rating.label),
+                  child: Text(rating.localizedLabel(context)),
                 );
               }).toList(),
               onChanged: (value) =>
@@ -913,7 +915,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
               child: DropdownButtonFormField<SalesRange>(
                 value: _salesRange,
                 decoration: InputDecoration(
-                  labelText: '销量',
+                  labelText: S.of(context).salesLabel,
                   prefixIcon: const Icon(Icons.trending_up),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -928,7 +930,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                 items: SalesRange.values.map((range) {
                   return DropdownMenuItem(
                     value: range,
-                    child: Text(range.label),
+                    child: Text(range == SalesRange.all
+                        ? S.of(context).salesRangeAll
+                        : range.label),
                   );
                 }).toList(),
                 onChanged: (value) =>

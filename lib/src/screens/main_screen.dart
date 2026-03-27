@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../providers/audio_provider.dart';
 import '../providers/update_provider.dart';
 import '../providers/auth_provider.dart';
@@ -40,22 +41,23 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     ];
   }
 
-  List<NavigationDestination> _buildDestinations(bool showUpdateBadge) {
+  List<NavigationDestination> _buildDestinations(BuildContext context, bool showUpdateBadge) {
+    final s = S.of(context);
     return [
-      const NavigationDestination(
-        icon: Icon(Icons.home_outlined),
-        selectedIcon: Icon(Icons.home),
-        label: '主页',
+      NavigationDestination(
+        icon: const Icon(Icons.home_outlined),
+        selectedIcon: const Icon(Icons.home),
+        label: s.navHome,
       ),
-      const NavigationDestination(
-        icon: Icon(Icons.search_outlined),
-        selectedIcon: Icon(Icons.search),
-        label: '搜索',
+      NavigationDestination(
+        icon: const Icon(Icons.search_outlined),
+        selectedIcon: const Icon(Icons.search),
+        label: s.navSearch,
       ),
-      const NavigationDestination(
-        icon: Icon(Icons.favorite_border),
-        selectedIcon: Icon(Icons.favorite),
-        label: '我的',
+      NavigationDestination(
+        icon: const Icon(Icons.favorite_border),
+        selectedIcon: const Icon(Icons.favorite),
+        label: s.navMy,
       ),
       NavigationDestination(
         icon: Badge(
@@ -66,7 +68,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           isLabelVisible: showUpdateBadge,
           child: const Icon(Icons.settings),
         ),
-        label: '设置',
+        label: s.navSettings,
       ),
     ];
   }
@@ -90,7 +92,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     final showUpdateBadge = ref.watch(showUpdateRedDotProvider);
-    final destinations = _buildDestinations(showUpdateBadge);
+    final destinations = _buildDestinations(context, showUpdateBadge);
 
     if (isLandscape) {
       // 横屏布局：使用 NavigationRail
@@ -211,10 +213,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                           color: Colors.white,
                         ),
                         const SizedBox(width: 6),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            '离线模式：网络连接失败，仅可访问下载内容',
-                            style: TextStyle(
+                            S.of(context).offlineModeMessage,
+                            style: const TextStyle(
                               fontSize: 11,
                               color: Colors.white,
                             ),
@@ -231,9 +233,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                             minimumSize: Size.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
-                          child: const Text(
-                            '重试',
-                            style: TextStyle(
+                          child: Text(
+                            S.of(context).retry,
+                            style: const TextStyle(
                               fontSize: 11,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -313,10 +315,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                         color: Colors.white,
                       ),
                       const SizedBox(width: 6),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          '离线模式：网络连接失败，仅可访问下载内容',
-                          style: TextStyle(
+                          S.of(context).offlineModeMessage,
+                          style: const TextStyle(
                             fontSize: 11,
                             color: Colors.white,
                           ),
@@ -333,9 +335,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        child: const Text(
-                          '重试',
-                          style: TextStyle(
+                        child: Text(
+                          S.of(context).retry,
+                          style: const TextStyle(
                             fontSize: 11,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

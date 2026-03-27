@@ -1,0 +1,692 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "KikoFlu",
+
+  "navHome": "Home",
+  "navSearch": "Search",
+  "navMy": "My",
+  "navSettings": "Settings",
+
+  "offlineModeMessage": "Offline mode: Network connection failed, only downloaded content is accessible",
+  "retry": "Retry",
+
+  "searchTypeKeyword": "Keyword",
+  "searchTypeTag": "Tag",
+  "searchTypeVa": "Voice Actor",
+  "searchTypeCircle": "Circle",
+  "searchTypeRjNumber": "RJ Number",
+  "searchHintKeyword": "Enter work name or keyword...",
+  "searchHintTag": "Enter tag name...",
+  "searchHintVa": "Enter voice actor name...",
+  "searchHintCircle": "Enter circle name...",
+  "searchHintRjNumber": "Enter number...",
+
+  "ageRatingAll": "All",
+  "ageRatingGeneral": "All Ages",
+  "ageRatingR15": "R-15",
+  "ageRatingAdult": "Adult",
+
+  "salesRangeAll": "All",
+
+  "sortRelease": "Release Date",
+  "sortCreateDate": "Catalog Date",
+  "sortRating": "Rating",
+  "sortReviewCount": "Reviews",
+  "sortRandom": "Random",
+  "sortDlCount": "Sales",
+  "sortPrice": "Price",
+  "sortNsfw": "All Ages",
+  "sortUpdatedAt": "Marked Date",
+  "sortAsc": "Ascending",
+  "sortDesc": "Descending",
+
+  "sortOptions": "Sort Options",
+  "sortField": "Sort Field",
+  "sortDirection": "Sort Direction",
+
+  "displayModeAll": "All",
+  "displayModePopular": "Popular",
+  "displayModeRecommended": "Recommended",
+
+  "subtitlePriorityHighest": "Priority",
+  "subtitlePriorityLowest": "Deferred",
+
+  "translationSourceGoogle": "Google Translate",
+  "translationSourceYoudao": "Youdao Translate",
+  "translationSourceMicrosoft": "Microsoft Translate",
+  "translationSourceLlm": "LLM Translate",
+
+  "progressMarked": "Marked",
+  "progressListening": "Listening",
+  "progressListened": "Listened",
+  "progressReplay": "Replay",
+  "progressPostponed": "Postponed",
+
+  "loginTitle": "Login",
+  "register": "Register",
+  "addAccount": "Add Account",
+  "registerAccount": "Register Account",
+  "username": "Username",
+  "password": "Password",
+  "serverAddress": "Server Address",
+  "login": "Login",
+  "loginSuccess": "Login successful",
+  "loginFailed": "Login failed",
+  "registerFailed": "Registration failed",
+  "usernameMinLength": "Username must be at least 5 characters",
+  "passwordMinLength": "Password must be at least 5 characters",
+  "accountAdded": "Account \"{username}\" has been added",
+  "@accountAdded": {
+    "placeholders": {
+      "username": { "type": "String" }
+    }
+  },
+  "testConnection": "Test Connection",
+  "testing": "Testing...",
+  "enterServerAddressToTest": "Please enter server address to test connection",
+  "latencyMs": "{ms}ms",
+  "@latencyMs": {
+    "placeholders": {
+      "ms": { "type": "String" }
+    }
+  },
+  "connectionFailed": "Connection failed",
+
+  "guestModeTitle": "Guest Mode Confirmation",
+  "guestModeMessage": "Guest mode has limited functionality:\n\n• Cannot mark or rate works\n• Cannot create playlists\n• Cannot sync progress\n\nGuest mode uses a demo account to connect to the server, which may be unstable.",
+  "continueGuestMode": "Continue with Guest Mode",
+  "guestAccountAdded": "Guest account has been added",
+  "guestLoginFailed": "Guest login failed",
+  "guestMode": "Guest Mode",
+
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "close": "Close",
+  "delete": "Delete",
+  "save": "Save",
+  "edit": "Edit",
+  "add": "Add",
+  "create": "Create",
+  "ok": "OK",
+
+  "search": "Search",
+  "filter": "Filter",
+  "advancedFilter": "Advanced Filter",
+  "enterSearchContent": "Please enter search content",
+  "searchTag": "Search tags...",
+  "minRating": "Min Rating",
+  "minRatingStars": "{stars} stars",
+  "@minRatingStars": {
+    "placeholders": {
+      "stars": { "type": "String" }
+    }
+  },
+
+  "searchHistory": "Search History",
+  "clearSearchHistory": "Clear Search History",
+  "clearSearchHistoryConfirm": "Are you sure you want to clear all search history?",
+  "clear": "Clear",
+  "searchHistoryCleared": "Search history cleared",
+  "noSearchHistory": "No search history",
+
+  "excludeMode": "Exclude",
+  "includeMode": "Include",
+
+  "noResults": "No results",
+  "loadFailed": "Load failed",
+  "loadFailedWithError": "Load failed: {error}",
+  "@loadFailedWithError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "loading": "Loading...",
+  "calculating": "Calculating...",
+  "getFailed": "Failed to retrieve",
+
+  "settingsTitle": "Settings",
+  "accountManagement": "Account Management",
+  "accountManagementSubtitle": "Multi-account management, switch accounts",
+  "privacyMode": "Privacy Mode",
+  "privacyModeEnabled": "Enabled - Playback info is hidden",
+  "privacyModeDisabled": "Disabled",
+  "permissionManagement": "Permission Management",
+  "permissionManagementSubtitle": "Notification permissions, background running permissions",
+  "desktopFloatingLyric": "Desktop Floating Lyrics",
+  "floatingLyricEnabled": "Enabled - Lyrics will display on desktop",
+  "floatingLyricDisabled": "Disabled",
+  "styleSettings": "Style Settings",
+  "styleSettingsSubtitle": "Customize font, color, transparency, etc.",
+  "downloadPath": "Download Path",
+  "downloadPathSubtitle": "Customize download file save location",
+  "cacheManagement": "Cache Management",
+  "currentCache": "Current cache: {size}",
+  "@currentCache": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "themeSettings": "Theme Settings",
+  "themeSettingsSubtitle": "Dark mode, theme color, etc.",
+  "uiSettings": "UI Settings",
+  "uiSettingsSubtitle": "Player, detail page, cards, etc.",
+  "preferenceSettings": "Preference Settings",
+  "preferenceSettingsSubtitle": "Translation source, blocking, audio preferences, etc.",
+
+  "aboutTitle": "About",
+  "unknownVersion": "Unknown",
+  "licenseLoadFailed": "Failed to load LICENSE file",
+  "licenseEmpty": "LICENSE content is empty",
+  "failedToLoadAbout": "Failed to load about info",
+  "newVersionFound": "New Version Found",
+  "newVersionAvailable": "{version} available (current: {current})",
+  "@newVersionAvailable": {
+    "placeholders": {
+      "version": { "type": "String" },
+      "current": { "type": "String" }
+    }
+  },
+  "versionInfo": "Version Info",
+  "currentVersion": "Current version: {version}",
+  "@currentVersion": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "checkUpdate": "Check for Updates",
+  "author": "Author",
+  "projectRepo": "Project Repository",
+  "openSourceLicense": "Open Source License",
+  "cannotOpenLink": "Cannot open link",
+  "openLinkFailed": "Failed to open link: {error}",
+  "@openLinkFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "foundNewVersion": "Found new version {version}",
+  "@foundNewVersion": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "view": "View",
+  "alreadyLatestVersion": "Already the latest version",
+  "checkUpdateFailed": "Update check failed, please check network connection",
+
+  "onlineMarks": "Online Marks",
+  "historyRecord": "History",
+  "playlists": "Playlists",
+  "downloaded": "Downloaded",
+  "downloadTasks": "Download Tasks",
+  "subtitleLibrary": "Subtitle Library",
+
+  "all": "All",
+  "marked": "Marked",
+  "listening": "Listening",
+  "listened": "Listened",
+  "replayMark": "Replay",
+  "postponed": "Postponed",
+
+  "switchToSmallGrid": "Switch to small grid view",
+  "switchToList": "Switch to list view",
+  "switchToLargeGrid": "Switch to large grid view",
+  "sort": "Sort",
+
+  "noPlayHistory": "No play history",
+  "clearHistory": "Clear History",
+  "clearHistoryTitle": "Clear History",
+  "clearHistoryConfirm": "Are you sure you want to clear all play history? This action cannot be undone.",
+
+  "popularNoSort": "Popular mode does not support sorting",
+  "recommendedNoSort": "Recommended mode does not support sorting",
+  "showAllWorks": "Show all works",
+  "showOnlySubtitled": "Show only subtitled works",
+
+  "selectedCount": "{count} selected",
+  "@selectedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "selectAll": "Select All",
+  "deselectAll": "Deselect All",
+  "select": "Select",
+  "noDownloadTasks": "No download tasks",
+  "nFiles": "{count} files",
+  "@nFiles": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "errorWithMessage": "Error: {error}",
+  "@errorWithMessage": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "pause": "Pause",
+  "resume": "Resume",
+  "deletionConfirmTitle": "Confirm Delete",
+  "deletionConfirmMessage": "Are you sure you want to delete {count} selected download tasks? Downloaded files will also be removed.",
+  "@deletionConfirmMessage": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "deletedNFiles": "Deleted {count} files",
+  "@deletedNFiles": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "downloadStatusPending": "Pending",
+  "downloadStatusDownloading": "Downloading",
+  "downloadStatusCompleted": "Completed",
+  "downloadStatusFailed": "Failed",
+  "downloadStatusPaused": "Paused",
+
+  "translationFailed": "Translation failed: {error}",
+  "@translationFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "copiedToClipboard": "Copied {label}: {text}",
+  "@copiedToClipboard": {
+    "placeholders": {
+      "label": { "type": "String" },
+      "text": { "type": "String" }
+    }
+  },
+  "loadingFileList": "Loading file list...",
+  "loadFileListFailed": "Failed to load file list: {error}",
+  "@loadFileListFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "playlistTitle": "Playlist",
+  "noAudioPlaying": "No audio playing",
+  "playbackSpeed": "Playback Speed",
+  "backward10s": "Backward 10s",
+  "forward10s": "Forward 10s",
+  "sleepTimer": "Sleep Timer",
+  "repeatMode": "Repeat Mode",
+  "repeatOff": "Off",
+  "repeatOne": "Single",
+  "repeatAll": "All",
+  "addMark": "Add Mark",
+  "viewDetail": "View Detail",
+  "volume": "Volume",
+
+  "sleepTimerTitle": "Sleep Timer",
+  "aboutToStop": "About to stop",
+  "remainingTime": "Remaining time",
+  "finishCurrentTrack": "Stop after current track finishes",
+  "addMinutes": "+{min} min",
+  "@addMinutes": {
+    "placeholders": {
+      "min": { "type": "int" }
+    }
+  },
+  "cancelTimer": "Cancel Timer",
+  "duration": "Duration",
+  "specifyTime": "Specify Time",
+  "selectTimerDuration": "Select timer duration",
+  "selectStopTime": "Select the time to stop playback",
+
+  "markWork": "Mark Work",
+  "addToPlaylist": "Add to Playlist",
+  "remove": "Remove",
+
+  "createPlaylist": "Create Playlist",
+  "addPlaylist": "Add Playlist",
+  "playlistName": "Playlist Name",
+  "enterPlaylistName": "Enter name",
+  "privacySetting": "Privacy Setting",
+  "playlistDescription": "Description (optional)",
+  "addDescription": "Add a description",
+  "enterPlaylistNameWarning": "Please enter a playlist name",
+  "enterPlaylistLink": "Please enter a playlist link",
+
+  "switchAccountTitle": "Switch Account",
+  "switchAccountConfirm": "Are you sure you want to switch to account \"{username}\"?",
+  "@switchAccountConfirm": {
+    "placeholders": {
+      "username": { "type": "String" }
+    }
+  },
+  "switchedToAccount": "Switched to account: {username}",
+  "@switchedToAccount": {
+    "placeholders": {
+      "username": { "type": "String" }
+    }
+  },
+  "switchFailed": "Switch failed, please check account info",
+  "switchFailedWithError": "Switch failed: {error}",
+  "@switchFailedWithError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "noAccounts": "No accounts",
+  "tapToAddAccount": "Tap the button in the bottom right to add an account",
+  "currentAccount": "Current Account",
+  "switchAction": "Switch",
+  "deleteAccount": "Delete Account",
+  "deleteAccountConfirm": "Are you sure you want to delete account \"{username}\"? This action cannot be undone.",
+  "@deleteAccountConfirm": {
+    "placeholders": {
+      "username": { "type": "String" }
+    }
+  },
+  "accountDeleted": "Account deleted",
+  "deletionFailedWithError": "Deletion failed: {error}",
+  "@deletionFailedWithError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "subtitleLibraryPriority": "Subtitle Library Priority",
+  "selectSubtitlePriority": "Select subtitle library priority for auto-loading:",
+  "subtitlePriorityHighestDesc": "Search subtitle library first, then online/downloads",
+  "subtitlePriorityLowestDesc": "Search online/downloads first, then subtitle library",
+  "defaultSortSettings": "Default Sort Settings",
+  "defaultSortUpdated": "Default sort updated",
+  "translationSourceSettings": "Translation Source Settings",
+  "selectTranslationProvider": "Select translation service provider:",
+  "needsConfiguration": "Needs configuration",
+  "llmTranslation": "LLM Translation",
+  "goToConfigure": "Configure",
+  "subtitlePrioritySettingSubtitle": "Subtitle library priority",
+  "defaultSortSettingTitle": "Default sort for home page",
+  "translationSource": "Translation Source",
+  "llmSettings": "LLM Settings",
+  "llmSettingsSubtitle": "Configure API URL, Key, and model",
+  "audioFormatPreference": "Audio Format Preference",
+  "audioFormatSubtitle": "Set audio format priority order",
+  "blockingSettings": "Blocking Settings",
+  "blockingSettingsSubtitle": "Manage blocked tags, voice actors, and circles",
+  "audioPassthrough": "Audio Passthrough (Beta)",
+  "audioPassthroughDescWindows": "Enable WASAPI exclusive mode for lossless output (restart required)",
+  "audioPassthroughDescMac": "Enable CoreAudio exclusive mode for lossless output",
+  "audioPassthroughDisableDesc": "Disable audio passthrough mode",
+  "warning": "Warning",
+  "audioPassthroughWarning": "This feature is not fully tested and may cause unexpected audio output. Are you sure you want to enable it?",
+  "exclusiveModeEnabled": "Exclusive mode enabled (restart required)",
+  "audioPassthroughEnabled": "Audio passthrough mode enabled",
+  "audioPassthroughDisabled": "Audio passthrough mode disabled",
+
+  "tagVoteSupport": "Support",
+  "tagVoteOppose": "Oppose",
+  "tagVoted": "Voted",
+  "votedSupport": "Voted support",
+  "votedOppose": "Voted oppose",
+  "voteCancelled": "Vote cancelled",
+  "voteFailed": "Vote failed: {error}",
+  "@voteFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "blockThisTag": "Block this tag",
+  "copyTag": "Copy Tag",
+
+  "addTag": "Add Tag",
+  "loadTagsFailed": "Failed to load tags: {error}",
+  "@loadTagsFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "selectAtLeastOneTag": "Please select at least one tag",
+  "tagSubmitSuccess": "Tags submitted, waiting for server to process",
+  "bindEmailFirst": "Please bind your email at www.asmr.one first",
+  "selectedNTags": "Selected {count} tags:",
+  "@selectedNTags": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "noMatchingTags": "No matching tags found",
+
+  "loadFailedRetry": "Load failed, tap to retry",
+  "refresh": "Refresh",
+
+  "playlistPrivacyPrivate": "Private",
+  "playlistPrivacyUnlisted": "Unlisted",
+  "playlistPrivacyPublic": "Public",
+
+  "systemPlaylistMarked": "My Marked",
+  "systemPlaylistLiked": "My Liked",
+
+  "totalNWorks": "{count} works",
+  "@totalNWorks": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "pageNOfTotal": "Page {page}/{total}",
+  "@pageNOfTotal": {
+    "placeholders": {
+      "page": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "translateTitle": "Translate",
+  "translateDescription": "Translate Description",
+  "translating": "Translating...",
+  "translationFallbackNotice": "Translation failed, auto-switched to {source}",
+  "@translationFallbackNotice": {
+    "placeholders": {
+      "source": { "type": "String" }
+    }
+  },
+
+  "tagLabel": "Tags",
+  "vaLabel": "Voice Actors",
+  "circleLabel": "Circle",
+  "releaseDate": "Release Date",
+  "ratingLabel": "Rating",
+  "salesLabel": "Sales",
+  "priceLabel": "Price",
+  "durationLabel": "Duration",
+  "ageRatingLabel": "Age Rating",
+  "hasSubtitle": "Has Subtitle",
+  "noSubtitle": "No Subtitle",
+  "description": "Description",
+  "fileList": "File List",
+  "series": "Series",
+
+  "settingsLanguage": "Language",
+  "settingsLanguageSubtitle": "Switch display language",
+  "languageSystem": "Follow System",
+  "languageZh": "简体中文",
+  "languageZhTw": "繁體中文",
+  "languageEn": "English",
+  "languageJa": "日本語",
+  "languageRu": "Русский",
+
+  "themeModeDark": "Dark Mode",
+  "themeModeLight": "Light Mode",
+  "themeModeSystem": "Follow System",
+  "colorSchemeOceanBlue": "Ocean Blue",
+  "colorSchemeForestGreen": "Forest Green",
+  "colorSchemeSunsetOrange": "Sunset Orange",
+  "colorSchemeLavenderPurple": "Lavender Purple",
+  "colorSchemeSakuraPink": "Sakura Pink",
+  "colorSchemeDynamic": "Dynamic Color",
+
+  "noData": "No data",
+  "unknownError": "Unknown error",
+  "networkError": "Network error",
+  "timeout": "Request timeout",
+
+  "playAll": "Play All",
+  "download": "Download",
+  "downloadAll": "Download All",
+  "downloading": "Downloading",
+  "downloadComplete": "Download complete",
+  "downloadFailed": "Download failed",
+  "startDownload": "Starting download",
+
+  "confirmDeleteDownload": "Are you sure you want to delete this download? The downloaded file will also be removed.",
+  "deletedSuccessfully": "Deleted successfully",
+
+  "scanSubtitleLibrary": "Scan Subtitle Library",
+  "scanning": "Scanning...",
+  "scanComplete": "Scan complete",
+  "noSubtitleFiles": "No subtitle files found",
+  "subtitleFilesFound": "Found {count} subtitle files",
+  "@subtitleFilesFound": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "selectDirectory": "Select Directory",
+
+  "privacyModeSettings": "Privacy Mode Settings",
+  "blurCover": "Blur Cover",
+  "maskTitle": "Mask Title",
+  "customTitle": "Custom Title",
+  "privacyModeDesc": "Hide playback information in system notifications and media controls",
+
+  "audioFormatSettingsTitle": "Audio Format Settings",
+  "preferredFormat": "Preferred Format",
+  "cacheSizeLimit": "Cache Size Limit",
+
+  "llmApiUrl": "API URL",
+  "llmApiKey": "API Key",
+  "llmModel": "Model",
+  "llmPrompt": "System Prompt",
+  "llmConcurrency": "Concurrency",
+  "llmTestTranslation": "Test Translation",
+  "llmTestSuccess": "Test successful",
+  "llmTestFailed": "Test failed",
+
+  "subtitleTimingAdjustment": "Subtitle Timing",
+  "playerLyricStyle": "Player Lyrics Style",
+  "floatingLyricStyle": "Floating Lyrics Style",
+  "fontSize": "Font Size",
+  "fontColor": "Font Color",
+  "backgroundColor": "Background Color",
+  "transparency": "Transparency",
+  "windowSize": "Window Size",
+
+  "playerButtonSettings": "Player Button Settings",
+  "showButton": "Show Button",
+  "buttonOrder": "Button Order",
+
+  "workCardDisplaySettings": "Work Card Display",
+  "showTags": "Show Tags",
+  "showVa": "Show Voice Actors",
+  "showRating": "Show Rating",
+  "showPrice": "Show Price",
+  "cardSize": "Card Size",
+  "compact": "Compact",
+  "medium": "Medium",
+  "full": "Full",
+
+  "workDetailDisplaySettings": "Work Detail Display",
+  "infoSectionVisibility": "Info Section Visibility",
+  "imageSize": "Image Size",
+  "showMetadata": "Show Metadata",
+
+  "myTabsDisplaySettings": "My Page Tab Settings",
+  "showTab": "Show Tab",
+  "tabOrder": "Tab Order",
+
+  "blockedItems": "Blocked Items",
+  "blockedTags": "Blocked Tags",
+  "blockedVas": "Blocked Voice Actors",
+  "blockedCircles": "Blocked Circles",
+  "unblock": "Unblock",
+  "noBlockedItems": "No blocked items",
+
+  "clearCache": "Clear Cache",
+  "clearCacheConfirm": "Are you sure you want to clear all cache?",
+  "cacheCleared": "Cache cleared",
+
+  "imagePreview": "Image Preview",
+  "saveImage": "Save Image",
+  "imageSaved": "Image saved",
+  "saveImageFailed": "Failed to save image",
+
+  "logout": "Logout",
+  "logoutConfirm": "Are you sure you want to logout?",
+
+  "openInBrowser": "Open in Browser",
+  "copyLink": "Copy Link",
+  "linkCopied": "Link copied",
+
+  "ratingDistribution": "Rating Distribution",
+  "reviewsCount": "{count} reviews",
+  "@reviewsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ratingsCount": "{count} ratings",
+  "@ratingsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "myReviews": "My Reviews",
+  "noReviews": "No reviews",
+  "writeReview": "Write Review",
+  "editReview": "Edit Review",
+  "deleteReview": "Delete Review",
+  "deleteReviewConfirm": "Are you sure you want to delete this review?",
+  "reviewDeleted": "Review deleted",
+  "reviewContent": "Review content",
+  "enterReviewContent": "Enter review content...",
+  "submitReview": "Submit",
+  "reviewSubmitted": "Review submitted",
+  "reviewFailed": "Review failed: {error}",
+  "@reviewFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "notificationPermission": "Notification Permission",
+  "mediaPermission": "Media Library Permission",
+  "storagePermission": "Storage Permission",
+  "granted": "Granted",
+  "denied": "Denied",
+  "requestPermission": "Request",
+
+  "localDownloads": "Local Downloads",
+  "offlinePlayback": "Offline Playback",
+  "noDownloadedWorks": "No downloaded works",
+
+  "updateAvailable": "Update Available",
+  "ignoreThisVersion": "Ignore this version",
+  "remindLater": "Remind Later",
+  "updateNow": "Update Now",
+
+  "fetchFailed": "Fetch failed",
+  "operationFailedWithError": "Operation failed: {error}",
+  "@operationFailedWithError": { "placeholders": { "error": { "type": "String" } } },
+  "aboutSubtitle": "Check updates, licenses, etc.",
+  "currentCacheSize": "Current Cache Size",
+  "cacheLimitLabelMB": "Limit: {size}MB",
+  "@cacheLimitLabelMB": { "placeholders": { "size": { "type": "int" } } },
+  "cacheUsagePercent": "Usage",
+  "autoCleanTitle": "Auto Clean Info",
+  "autoCleanDescription": "• Cache is auto-cleaned when exceeding the limit\n• Deletes until cache drops to 80% of limit\n• Uses Least Recently Used (LRU) strategy",
+  "autoCleanDescriptionShort": "• Cache is auto-cleaned when exceeding the limit\n• Deletes until cache drops to 80% of limit",
+  "confirmClear": "Confirm Clear",
+  "confirmClearCacheMessage": "Are you sure you want to clear all cache? This action cannot be undone.",
+  "clearCacheFailedWithError": "Clear cache failed: {error}",
+  "@clearCacheFailedWithError": { "placeholders": { "error": { "type": "String" } } },
+  "hasNewVersion": "New version"
+}

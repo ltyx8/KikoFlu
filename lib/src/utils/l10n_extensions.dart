@@ -1,0 +1,188 @@
+import 'package:flutter/widgets.dart';
+import '../../l10n/app_localizations.dart';
+import '../models/search_type.dart';
+import '../models/sort_options.dart';
+import '../models/playlist.dart';
+import '../providers/settings_provider.dart';
+import '../providers/works_provider.dart';
+import '../providers/my_reviews_provider.dart';
+import '../providers/player_buttons_provider.dart';
+
+// ============================================================
+// SearchType
+// ============================================================
+
+extension SearchTypeL10n on SearchType {
+  String localizedLabel(BuildContext context) {
+    final s = S.of(context);
+    return switch (this) {
+      SearchType.keyword => s.searchTypeKeyword,
+      SearchType.tag => s.searchTypeTag,
+      SearchType.va => s.searchTypeVa,
+      SearchType.circle => s.searchTypeCircle,
+      SearchType.rjNumber => s.searchTypeRjNumber,
+    };
+  }
+
+  String localizedHint(BuildContext context) {
+    final s = S.of(context);
+    return switch (this) {
+      SearchType.keyword => s.searchHintKeyword,
+      SearchType.tag => s.searchHintTag,
+      SearchType.va => s.searchHintVa,
+      SearchType.circle => s.searchHintCircle,
+      SearchType.rjNumber => s.searchHintRjNumber,
+    };
+  }
+}
+
+// ============================================================
+// AgeRating
+// ============================================================
+
+extension AgeRatingL10n on AgeRating {
+  String localizedLabel(BuildContext context) {
+    final s = S.of(context);
+    return switch (this) {
+      AgeRating.all => s.ageRatingAll,
+      AgeRating.general => s.ageRatingGeneral,
+      AgeRating.r15 => s.ageRatingR15,
+      AgeRating.adult => s.ageRatingAdult,
+    };
+  }
+}
+
+// ============================================================
+// SortOrder
+// ============================================================
+
+extension SortOrderL10n on SortOrder {
+  String localizedLabel(BuildContext context) {
+    final s = S.of(context);
+    return switch (this) {
+      SortOrder.release => s.sortRelease,
+      SortOrder.createDate => s.sortCreateDate,
+      SortOrder.rating => s.sortRating,
+      SortOrder.review => s.sortReviewCount,
+      SortOrder.randomSeed => s.sortRandom,
+      SortOrder.dlCount => s.sortDlCount,
+      SortOrder.price => s.sortPrice,
+      SortOrder.nsfw => s.sortNsfw,
+      SortOrder.updatedAt => s.sortUpdatedAt,
+    };
+  }
+}
+
+// ============================================================
+// SortDirection
+// ============================================================
+
+extension SortDirectionL10n on SortDirection {
+  String localizedLabel(BuildContext context) {
+    final s = S.of(context);
+    return switch (this) {
+      SortDirection.asc => s.sortAsc,
+      SortDirection.desc => s.sortDesc,
+    };
+  }
+}
+
+// ============================================================
+// DisplayMode
+// ============================================================
+
+extension DisplayModeL10n on DisplayMode {
+  String localizedLabel(BuildContext context) {
+    final s = S.of(context);
+    return switch (this) {
+      DisplayMode.all => s.displayModeAll,
+      DisplayMode.popular => s.displayModePopular,
+      DisplayMode.recommended => s.displayModeRecommended,
+    };
+  }
+}
+
+// ============================================================
+// SubtitleLibraryPriority
+// ============================================================
+
+extension SubtitleLibraryPriorityL10n on SubtitleLibraryPriority {
+  String localizedName(BuildContext context) {
+    final s = S.of(context);
+    return switch (this) {
+      SubtitleLibraryPriority.highest => s.subtitlePriorityHighest,
+      SubtitleLibraryPriority.lowest => s.subtitlePriorityLowest,
+    };
+  }
+}
+
+// ============================================================
+// TranslationSource
+// ============================================================
+
+extension TranslationSourceL10n on TranslationSource {
+  String localizedName(BuildContext context) {
+    final s = S.of(context);
+    return switch (this) {
+      TranslationSource.google => s.translationSourceGoogle,
+      TranslationSource.youdao => s.translationSourceYoudao,
+      TranslationSource.microsoft => s.translationSourceMicrosoft,
+      TranslationSource.llm => s.translationSourceLlm,
+    };
+  }
+}
+
+// ============================================================
+// MyReviewFilter
+// ============================================================
+
+extension MyReviewFilterL10n on MyReviewFilter {
+  String localizedLabel(BuildContext context) {
+    final s = S.of(context);
+    return switch (this) {
+      MyReviewFilter.all => s.all,
+      MyReviewFilter.marked => s.marked,
+      MyReviewFilter.listening => s.listening,
+      MyReviewFilter.listened => s.listened,
+      MyReviewFilter.replay => s.replayMark,
+      MyReviewFilter.postponed => s.postponed,
+    };
+  }
+}
+
+// ============================================================
+// PlaylistPrivacy
+// ============================================================
+
+extension PlaylistPrivacyL10n on PlaylistPrivacy {
+  String localizedLabel(BuildContext context) {
+    final s = S.of(context);
+    return switch (this) {
+      PlaylistPrivacy.private => s.playlistPrivacyPrivate,
+      PlaylistPrivacy.unlisted => s.playlistPrivacyUnlisted,
+      PlaylistPrivacy.public => s.playlistPrivacyPublic,
+    };
+  }
+}
+
+// ============================================================
+// PlayerButtonType
+// ============================================================
+
+extension PlayerButtonTypeL10n on PlayerButtonType {
+  String localizedLabel(BuildContext context) {
+    final s = S.of(context);
+    return switch (this) {
+      PlayerButtonType.seekBackward => s.backward10s,
+      PlayerButtonType.seekForward => s.forward10s,
+      PlayerButtonType.sleepTimer => s.sleepTimer,
+      PlayerButtonType.mark => s.markWork,
+      PlayerButtonType.volume => s.volume,
+      PlayerButtonType.speed => s.playbackSpeed,
+      PlayerButtonType.repeat => s.repeatMode,
+      PlayerButtonType.detail => s.viewDetail,
+      PlayerButtonType.subtitleAdjustment => s.subtitleTimingAdjustment,
+      PlayerButtonType.floatingLyric => s.desktopFloatingLyric,
+    };
+  }
+}

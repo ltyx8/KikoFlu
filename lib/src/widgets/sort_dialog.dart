@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import '../models/sort_options.dart';
+import '../utils/l10n_extensions.dart';
 import 'responsive_dialog.dart';
 
 /// 通用排序对话框
@@ -24,7 +26,7 @@ class CommonSortDialog extends StatefulWidget {
     required this.currentOption,
     required this.currentDirection,
     required this.onSort,
-    this.title = '排序选项',
+    this.title = 'Sort',
     this.autoClose = true,
     this.availableOptions,
   });
@@ -72,7 +74,7 @@ class _CommonSortDialogState extends State<CommonSortDialog> {
             IconButton(
               icon: const Icon(Icons.close),
               onPressed: () => Navigator.of(context).pop(),
-              tooltip: '关闭',
+              tooltip: S.of(context).close,
             ),
           ],
         ),
@@ -87,10 +89,10 @@ class _CommonSortDialogState extends State<CommonSortDialog> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8, bottom: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8, bottom: 8),
                       child: Text(
-                        '排序字段',
+                        S.of(context).sortField,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -103,7 +105,7 @@ class _CommonSortDialogState extends State<CommonSortDialog> {
                           mainAxisSize: MainAxisSize.min,
                           children: options.map((option) {
                             return RadioListTile<SortOrder>(
-                              title: Text(option.label),
+                              title: Text(option.localizedLabel(context)),
                               value: option,
                               groupValue: _currentOption,
                               onChanged: (value) {
@@ -129,10 +131,10 @@ class _CommonSortDialogState extends State<CommonSortDialog> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8, bottom: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8, bottom: 8),
                       child: Text(
-                        '排序方向',
+                        S.of(context).sortDirection,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -145,7 +147,7 @@ class _CommonSortDialogState extends State<CommonSortDialog> {
                           mainAxisSize: MainAxisSize.min,
                           children: SortDirection.values.map((direction) {
                             return RadioListTile<SortDirection>(
-                              title: Text(direction.label),
+                              title: Text(direction.localizedLabel(context)),
                               value: direction,
                               groupValue: _currentDirection,
                               onChanged: (value) {
@@ -186,14 +188,14 @@ class _CommonSortDialogState extends State<CommonSortDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             // 排序字段选择
-            const Text(
-              '排序字段',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Text(
+              S.of(context).sortField,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             ...options.map((option) {
               return RadioListTile<SortOrder>(
-                title: Text(option.label),
+                title: Text(option.localizedLabel(context)),
                 value: option,
                 groupValue: _currentOption,
                 onChanged: (value) {
@@ -206,14 +208,14 @@ class _CommonSortDialogState extends State<CommonSortDialog> {
             }),
             const Divider(),
             // 排序方向选择
-            const Text(
-              '排序方向',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Text(
+              S.of(context).sortDirection,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             ...SortDirection.values.map((direction) {
               return RadioListTile<SortDirection>(
-                title: Text(direction.label),
+                title: Text(direction.localizedLabel(context)),
                 value: direction,
                 groupValue: _currentDirection,
                 onChanged: (value) {
@@ -230,7 +232,7 @@ class _CommonSortDialogState extends State<CommonSortDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(widget.autoClose ? '取消' : '关闭'),
+          child: Text(widget.autoClose ? S.of(context).cancel : S.of(context).close),
         ),
       ],
     );

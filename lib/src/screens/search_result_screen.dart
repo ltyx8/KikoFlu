@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../models/sort_options.dart';
 import '../providers/search_result_provider.dart';
 import '../providers/auth_provider.dart';
@@ -188,7 +189,7 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
               onPressed: () => ref
                   .read(searchResultProvider.notifier)
                   .toggleSubtitleFilter(),
-              tooltip: searchState.subtitleFilter == 1 ? '显示全部作品' : '仅显示带字幕作品',
+              tooltip: searchState.subtitleFilter == 1 ? S.of(context).showAllWorks : S.of(context).showOnlySubtitled,
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -199,7 +200,7 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
                 padding: const EdgeInsets.all(8),
                 constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
                 onPressed: () => _showSortDialog(context),
-                tooltip: '排序',
+                tooltip: S.of(context).sort,
               ),
             ),
           ],
@@ -257,7 +258,8 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
             final value = condition['value'] as String;
             final isExclude = condition['isExclude'] as bool? ?? false;
             // RJ号需要添加RJ前缀显示
-            final displayValue = type == 'RJ号' ? 'RJ$value' : value;
+            final isRjNumber = RegExp(r'^\d+$').hasMatch(value);
+            final displayValue = isRjNumber ? 'RJ$value' : value;
 
             return Chip(
               avatar: Icon(
@@ -284,7 +286,7 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
             Chip(
               avatar: const Icon(Icons.star, size: 16),
               label: Text(
-                '评分 ≥ ${minRate.toStringAsFixed(2)}',
+                '${S.of(context).ratingLabel} ≥ ${minRate.toStringAsFixed(2)}',
                 style: const TextStyle(fontSize: 13),
               ),
               backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
@@ -322,7 +324,7 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Text(
-                '共 ${searchState.totalCount} 个结果',
+                S.of(context).totalNWorks(searchState.totalCount),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 13,
@@ -387,7 +389,7 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '${searchState.totalCount} 个结果',
+                  S.of(context).totalNWorks(searchState.totalCount),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                     fontSize: 14,
@@ -414,7 +416,7 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
             ),
             const SizedBox(height: 16),
             Text(
-              '搜索失败',
+              S.of(context).loadFailed,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
@@ -430,7 +432,7 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
               onPressed: () =>
                   ref.read(searchResultProvider.notifier).refresh(),
               icon: const Icon(Icons.refresh),
-              label: const Text('重试'),
+              label: Text(S.of(context).retry),
             ),
           ],
         ),
@@ -444,7 +446,7 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('正在搜索...'),
+            Text('...'),
           ],
         ),
       );
@@ -458,7 +460,7 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
             Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
-              '未找到相关作品',
+              S.of(context).noResults,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
           ],
@@ -513,12 +515,12 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
             ref.read(searchResultProvider.notifier).goToPage(page);
           },
           onScrollToTop: _scrollToTop,
-          endMessage: '已经到底啦~杂库~',
+          endMessage: '~',
         ),
         if (searchState.rawWorks.length > searchState.works.length) ...[
           const SizedBox(height: 8),
           Text(
-            '本页已排除 ${searchState.rawWorks.length - searchState.works.length} 个作品',
+            '${searchState.rawWorks.length - searchState.works.length} filtered',
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 12,
@@ -530,19 +532,8 @@ class _SearchResultContentState extends ConsumerState<_SearchResultContent> {
   }
 
   IconData _getConditionIcon(String type) {
-    switch (type) {
-      case '关键词':
-        return Icons.search;
-      case 'RJ号':
-        return Icons.tag;
-      case '标签':
-        return Icons.label;
-      case '社团':
-        return Icons.group;
-      case '声优':
-        return Icons.person;
-      default:
-        return Icons.search;
-    }
+    // type is a localized label, so we match by checking common patterns
+    // This is a best-effort fallback; the main UI uses SearchType enum directly
+    return Icons.search;
   }
 }

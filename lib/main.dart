@@ -23,8 +23,10 @@ import 'src/services/account_database.dart';
 import 'src/services/cache_service.dart';
 import 'src/services/download_service.dart';
 import 'src/services/floating_lyric_service.dart';
+import 'l10n/app_localizations.dart';
 import 'src/providers/audio_provider.dart';
 import 'src/providers/auth_provider.dart';
+import 'src/providers/locale_provider.dart';
 import 'src/providers/theme_provider.dart';
 import 'src/providers/update_provider.dart';
 import 'src/utils/global_keys.dart';
@@ -285,6 +287,7 @@ class _KikoeruAppState extends ConsumerState<KikoeruApp> with WindowListener {
   @override
   Widget build(BuildContext context) {
     final themeSettings = ref.watch(themeSettingsProvider);
+    final locale = ref.watch(localeProvider);
 
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
@@ -309,6 +312,9 @@ class _KikoeruAppState extends ConsumerState<KikoeruApp> with WindowListener {
           scaffoldMessengerKey: rootScaffoldMessengerKey,
           title: 'Kikoeru',
           debugShowCheckedModeBanner: false,
+          localizationsDelegates: S.localizationsDelegates,
+          supportedLocales: S.supportedLocales,
+          locale: locale,
           theme:
               AppTheme.lightTheme(lightScheme, themeSettings.colorSchemeType),
           darkTheme:
