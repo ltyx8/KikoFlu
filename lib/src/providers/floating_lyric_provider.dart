@@ -15,6 +15,35 @@ final floatingLyricEnabledProvider =
   return FloatingLyricEnabledNotifier(ref);
 });
 
+/// 悬浮字幕触摸开关（仅 Android，默认允许触摸）
+final floatingLyricTouchEnabledProvider =
+    StateNotifierProvider<FloatingLyricTouchEnabledNotifier, bool>((ref) {
+  return FloatingLyricTouchEnabledNotifier(ref);
+});
+
+class FloatingLyricTouchEnabledNotifier extends StateNotifier<bool> {
+  static const _key = 'floating_lyric_touch_enabled';
+  final Ref ref;
+
+  FloatingLyricTouchEnabledNotifier(this.ref) : super(true) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    state = prefs.getBool(_key) ?? true;
+  }
+
+  Future<void> toggle() async {
+    final newValue = !state;
+    state = newValue;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_key, newValue);
+    // 实时应用到已显示的悬浮窗
+    await FloatingLyricService.instance.setTouchEnabled(newValue);
+  }
+}
+
 class FloatingLyricEnabledNotifier extends StateNotifier<bool> {
   static const _key = 'floating_lyric_enabled';
   final Ref ref;
@@ -113,6 +142,12 @@ class FloatingLyricEnabledNotifier extends StateNotifier<bool> {
     // 1. 如果上面的 show 使用的是默认样式（因为 Provider 还没加载完），此时 Provider 应该加载完了，再次应用可以修正样式。
     // 2. 如果 Provider 在 show 执行期间加载完成并尝试 updateStyle 但失败了（因为窗口还没创建好），这里可以补救。
     ref.read(floatingLyricStyleProvider.notifier).applyStyle();
+
+    // 应用触摸设置（Android）
+    if (Platform.isAndroid) {
+      final touchEnabled = ref.read(floatingLyricTouchEnabledProvider);
+      await FloatingLyricService.instance.setTouchEnabled(touchEnabled);
+    }
 
     // 启动后台更新
     _startBackgroundUpdate();

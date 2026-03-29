@@ -798,6 +798,24 @@ abstract class S {
   /// **'Disabled'**
   String get floatingLyricDisabled;
 
+  /// No description provided for @floatingLyricTouch.
+  ///
+  /// In en, this message translates to:
+  /// **'Floating Lyric Touch'**
+  String get floatingLyricTouch;
+
+  /// No description provided for @floatingLyricTouchEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled - Drag floating lyrics'**
+  String get floatingLyricTouchEnabled;
+
+  /// No description provided for @floatingLyricTouchDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled - Touch passes through'**
+  String get floatingLyricTouchDisabled;
+
   /// No description provided for @styleSettings.
   ///
   /// In en, this message translates to:

@@ -30,6 +30,9 @@ class FloatingLyricView(
     private var isDragging = false
     private val dragThreshold = 10f // 拖动阈值，避免点击误触发
 
+    // 是否允许触摸交互（拖动等）
+    var touchEnabled: Boolean = true
+
     // 当前样式状态
     private var currentBackgroundColor: Int = Color.parseColor("#F2000000")
     private var currentCornerRadius: Float = 16f
@@ -64,6 +67,7 @@ class FloatingLyricView(
         ))
     }
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!touchEnabled) return false
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 // 记录初始位置

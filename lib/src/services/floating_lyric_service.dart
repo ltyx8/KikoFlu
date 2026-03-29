@@ -267,4 +267,18 @@ class FloatingLyricService {
       return false;
     }
   }
+
+  /// 设置悬浮窗触摸是否启用（仅 Android）
+  Future<bool> setTouchEnabled(bool enabled) async {
+    if (!Platform.isAndroid) return true;
+    try {
+      final result = await _platform.invokeMethod('setTouchEnabled', {
+        'enabled': enabled,
+      });
+      return result == true;
+    } catch (e) {
+      print('[FloatingLyric] 设置触摸模式失败: $e');
+      return false;
+    }
+  }
 }

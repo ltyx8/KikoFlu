@@ -334,8 +334,34 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               );
             },
           ),
+          if (Platform.isAndroid) ...[
+            Divider(
+              height: 1,
+              color: Theme.of(context).colorScheme.outlineVariant,
+              indent: 72,
+            ),
+            _buildFloatingLyricTouchTile(context),
+          ],
         ],
       ],
+    );
+  }
+
+  /// 悬浮字幕触摸开关（仅 Android）
+  Widget _buildFloatingLyricTouchTile(BuildContext context) {
+    final touchEnabled = ref.watch(floatingLyricTouchEnabledProvider);
+    return SwitchListTile(
+      secondary: const SizedBox(width: 24),
+      title: Text(S.of(context).floatingLyricTouch),
+      subtitle: Text(
+        touchEnabled
+            ? S.of(context).floatingLyricTouchEnabled
+            : S.of(context).floatingLyricTouchDisabled,
+      ),
+      value: touchEnabled,
+      onChanged: (value) async {
+        await ref.read(floatingLyricTouchEnabledProvider.notifier).toggle();
+      },
     );
   }
 

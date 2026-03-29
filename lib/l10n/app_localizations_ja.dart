@@ -367,6 +367,15 @@ class SJa extends S {
   String get floatingLyricDisabled => '無効';
 
   @override
+  String get floatingLyricTouch => 'フローティング字幕タッチ';
+
+  @override
+  String get floatingLyricTouchEnabled => '有効 - フローティング字幕をドラッグ可能';
+
+  @override
+  String get floatingLyricTouchDisabled => '無効 - タッチがフローティング字幕を透過';
+
+  @override
   String get styleSettings => 'スタイル設定';
 
   @override

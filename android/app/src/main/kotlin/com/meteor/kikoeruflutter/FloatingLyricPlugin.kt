@@ -37,6 +37,7 @@ class FloatingLyricPlugin private constructor(private val context: Context) : Me
     private var windowManager: WindowManager? = null
     private var floatingView: FloatingLyricView? = null
     private var isShowing = false
+    private var touchEnabled = true
 
     init {
         windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -63,6 +64,10 @@ class FloatingLyricPlugin private constructor(private val context: Context) : Me
             }
             "updateStyle" -> {
                 updateStyle(call, result)
+            }
+            "setTouchEnabled" -> {
+                val enabled = call.argument<Boolean>("enabled") ?: true
+                setTouchEnabled(enabled, result)
             }
             else -> {
                 result.notImplemented()
@@ -94,10 +99,11 @@ class FloatingLyricPlugin private constructor(private val context: Context) : Me
                     @Suppress("DEPRECATION")
                     WindowManager.LayoutParams.TYPE_PHONE
                 }
-                // 移除 FLAG_NOT_FOCUSABLE，改为 FLAG_NOT_TOUCH_MODAL 以支持触摸事件
+                // 设置触摸模式
                 flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                        (if (!touchEnabled) WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE else 0)
                 format = PixelFormat.TRANSLUCENT
                 gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
                 x = 0 // 水平居中
@@ -196,6 +202,26 @@ class FloatingLyricPlugin private constructor(private val context: Context) : Me
             result.success(true)
         } catch (e: Exception) {
             result.error("UPDATE_STYLE_FAILED", "更新样式失败: ${e.message}", null)
+        }
+    }
+
+    private fun setTouchEnabled(enabled: Boolean, result: Result) {
+        try {
+            touchEnabled = enabled
+            floatingView?.touchEnabled = enabled
+            // 动态更新窗口 FLAG_NOT_TOUCHABLE
+            if (isShowing && floatingView != null) {
+                val params = (floatingView!!.layoutParams as WindowManager.LayoutParams)
+                if (enabled) {
+                    params.flags = params.flags and WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE.inv()
+                } else {
+                    params.flags = params.flags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                }
+                windowManager?.updateViewLayout(floatingView as android.view.View, params)
+            }
+            result.success(true)
+        } catch (e: Exception) {
+            result.error("SET_TOUCH_FAILED", "设置触摸模式失败: ${e.message}", null)
         }
     }
 
