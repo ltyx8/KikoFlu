@@ -21,14 +21,15 @@ class LyricDisplay extends ConsumerWidget {
 
     // 如果有字幕，显示字幕
     if (lyricState.lyrics.isNotEmpty) {
-      return Container(
-        constraints: const BoxConstraints(
-          minHeight: 23,
-          maxHeight: 70,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-        child: Center(
-          child: SingleChildScrollView(
+      return AnimatedSize(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        child: Container(
+          constraints: const BoxConstraints(
+            minHeight: 23,
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+          child: Center(
             child: Text(
               currentLyric ?? '♪',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -38,8 +39,6 @@ class LyricDisplay extends ConsumerWidget {
                     fontSize: lyricSettings.smallFontSize,
                   ),
               textAlign: TextAlign.center,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),

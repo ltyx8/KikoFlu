@@ -66,7 +66,7 @@ class _DesktopFloatingLyricState extends State<DesktopFloatingLyric>
       await windowManager.setBackgroundColor(Colors.transparent);
       await windowManager.setHasShadow(false);
       // 设置一个合理的默认大小
-      await windowManager.setSize(const Size(800, 120));
+      await windowManager.setSize(const Size(800, 200));
 
       // Setup method handler
       final controller = await WindowController.fromCurrentEngine();

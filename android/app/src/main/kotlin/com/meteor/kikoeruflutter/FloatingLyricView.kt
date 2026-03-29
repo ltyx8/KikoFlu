@@ -53,7 +53,7 @@ class FloatingLyricView(
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL) // 使用常规字重
             gravity = Gravity.CENTER
             // 不添加文本阴影，保持简洁
-            maxLines = 2
+            maxLines = 6
             ellipsize = android.text.TextUtils.TruncateAt.END
             letterSpacing = 0.02f // 增加字间距，更易阅读
         }
