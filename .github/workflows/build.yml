@@ -248,6 +248,47 @@ jobs:
           name: linux-release
           path: KikoFlu-linux-x64.tar.gz
 
+  linux-arm64:
+    name: Linux ARM64 Build
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Build in ARM64 Container
+        uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: aarch64
+          distro: ubuntu22.04
+          githubToken: ${{ github.token }}
+          install: |
+            apt-get update
+            apt-get install -y \
+              curl git unzip xz-utils zip \
+              clang cmake ninja-build pkg-config \
+              libgtk-3-dev \
+              libmpv-dev \
+              libsqlite3-dev
+            # Install Flutter
+            git clone https://github.com/flutter/flutter.git -b stable /opt/flutter --depth 1
+            /opt/flutter/bin/flutter --version
+          run: |
+            export PATH="/opt/flutter/bin:$PATH"
+            flutter pub get
+            flutter build linux --release
+            cd build/linux/arm64/release/bundle
+            tar -czf "$GITHUB_WORKSPACE/KikoFlu-linux-arm64.tar.gz" .
+
+      - name: Upload Linux ARM64 Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: linux-arm64-release
+          path: KikoFlu-linux-arm64.tar.gz
+
   update-altsource:
     name: Update AltStore Source
     runs-on: ubuntu-latest
