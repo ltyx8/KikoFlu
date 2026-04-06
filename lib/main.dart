@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart' as p;
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart';
+import 'package:sqlite3/open.dart' as sqlite3_open;
 
 import 'src/screens/login_screen.dart';
 import 'src/screens/main_screen.dart';
@@ -53,6 +54,45 @@ void _setEnv(String key, String value) {
     calloc.free(keyNative);
     calloc.free(valueNative);
   }
+}
+
+ffi.DynamicLibrary _openSqliteOnLinux() {
+  final executableDir = p.dirname(Platform.resolvedExecutable);
+  final candidates = <String>[
+    p.join(executableDir, 'lib', 'libsqlite3.so.0'),
+    p.join(executableDir, 'lib', 'libsqlite3.so'),
+    'libsqlite3.so.0',
+    'libsqlite3.so',
+    '/lib/aarch64-linux-gnu/libsqlite3.so.0',
+    '/usr/lib/aarch64-linux-gnu/libsqlite3.so.0',
+    '/lib/x86_64-linux-gnu/libsqlite3.so.0',
+    '/usr/lib/x86_64-linux-gnu/libsqlite3.so.0',
+  ];
+
+  Object? lastError;
+  for (final candidate in candidates.toSet()) {
+    try {
+      return ffi.DynamicLibrary.open(candidate);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw ArgumentError(
+    'Failed to load sqlite3 on Linux. Tried: ${candidates.join(', ')}. '
+    'Last error: $lastError',
+  );
+}
+
+void _initSqfliteFfi() {
+  if (Platform.isLinux) {
+    sqlite3_open.open.overrideFor(
+      sqlite3_open.OperatingSystem.linux,
+      _openSqliteOnLinux,
+    );
+  }
+
+  sqfliteFfiInit();
 }
 
 Future<void> _configureMpv() async {
@@ -168,9 +208,8 @@ void main(List<String> args) async {
   }
 
   if (Platform.isWindows || Platform.isLinux) {
-    // Initialize FFI
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
+    _initSqfliteFfi();
+    databaseFactory = createDatabaseFactoryFfi(ffiInit: _initSqfliteFfi);
   }
 
   // Set minimum window size for desktop platforms
