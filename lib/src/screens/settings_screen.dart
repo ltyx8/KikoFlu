@@ -358,7 +358,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ? S.of(context).floatingLyricTouchEnabled
             : S.of(context).floatingLyricTouchDisabled,
       ),
-      value: touchEnabled,
+      value: !touchEnabled,
       onChanged: (value) async {
         await ref.read(floatingLyricTouchEnabledProvider.notifier).toggle();
       },

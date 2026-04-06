@@ -89,23 +89,14 @@ class FloatingLyricView(
         lockIndicator = ImageView(context).apply {
             setImageResource(android.R.drawable.ic_lock_lock)
             setColorFilter(Color.WHITE)
-            background = GradientDrawable().apply {
-                shape = GradientDrawable.OVAL
-                setColor(Color.parseColor("#66000000"))
-            }
-            val iconPadding = dpToPx(4f).toInt()
-            setPadding(iconPadding, iconPadding, iconPadding, iconPadding)
-            alpha = 0.95f
+            alpha = 0.7f
         }
 
         addView(lockIndicator, LayoutParams(
-            dpToPx(24f).toInt(),
-            dpToPx(24f).toInt(),
-            Gravity.END or Gravity.BOTTOM
-        ).apply {
-            val margin = dpToPx(6f).toInt()
-            setMargins(margin, margin, margin, margin)
-        })
+            dpToPx(12f).toInt(),
+            dpToPx(12f).toInt(),
+            Gravity.END or Gravity.TOP
+        ))
 
         updateLockIndicator()
     }
