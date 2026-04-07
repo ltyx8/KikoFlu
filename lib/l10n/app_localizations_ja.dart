@@ -2806,7 +2806,7 @@ class SJa extends S {
   }
 
   @override
-  String get localFileNotExist => 'ローカルファイルが存在しません';
+  String get localFileNotExist => 'ローカルファイルが存在しません。再読み込みしてください';
 
   @override
   String loadTextFailed(String error) {

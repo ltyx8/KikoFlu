@@ -2794,7 +2794,7 @@ class SZh extends S {
   }
 
   @override
-  String get localFileNotExist => '本地文件不存在';
+  String get localFileNotExist => '本地文件不存在，请尝试重载';
 
   @override
   String loadTextFailed(String error) {
@@ -6135,7 +6135,7 @@ class SZhHant extends SZh {
   }
 
   @override
-  String get localFileNotExist => '本地檔案不存在';
+  String get localFileNotExist => '本地檔案不存在，請嘗試重新載入';
 
   @override
   String loadTextFailed(String error) {

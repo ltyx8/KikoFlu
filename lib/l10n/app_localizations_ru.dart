@@ -2888,7 +2888,8 @@ class SRu extends S {
   }
 
   @override
-  String get localFileNotExist => 'Локальный файл не существует';
+  String get localFileNotExist =>
+      'Локальный файл не существует, попробуйте перезагрузить';
 
   @override
   String loadTextFailed(String error) {
