@@ -273,6 +273,11 @@ class LyricController extends StateNotifier<LyricState> {
       // 确保数据库已初始化
       await SubtitleLibraryService.ensureInitialized();
 
+      // 获取字幕库根目录，用于将相对路径拼接为绝对路径
+      final libraryDir =
+          await SubtitleLibraryService.getSubtitleLibraryDirectory();
+      final libraryRoot = libraryDir.path;
+
       // 优先级1: 通过 workId 查询数据库
       if (workId != null) {
         final records =
@@ -285,13 +290,14 @@ class LyricController extends StateNotifier<LyricState> {
             final (isMatch, score) = SubtitleLibraryService.checkMatch(
                 record.fileName, trackTitle);
             if (isMatch && score > bestScore) {
+              final absolutePath = record.absolutePath(libraryRoot);
               // 验证文件是否仍存在（DB 可能过期）
-              if (!await File(record.filePath).exists()) continue;
+              if (!await File(absolutePath).exists()) continue;
               bestScore = score;
-              bestMatchPath = record.filePath;
+              bestMatchPath = absolutePath;
               if (score == 1.0) {
                 print('[Lyric] 在数据库中找到完美匹配 (workId=$workId): ${record.fileName}');
-                return record.filePath;
+                return absolutePath;
               }
             }
           }
@@ -314,12 +320,13 @@ class LyricController extends StateNotifier<LyricState> {
           final (isMatch, score) = SubtitleLibraryService.checkMatch(
               record.fileName, trackTitle);
           if (isMatch && score > bestScore) {
-            if (!await File(record.filePath).exists()) continue;
+            final absolutePath = record.absolutePath(libraryRoot);
+            if (!await File(absolutePath).exists()) continue;
             bestScore = score;
-            bestMatchPath = record.filePath;
+            bestMatchPath = absolutePath;
             if (score == 1.0) {
               print('[Lyric] 在"已保存"中找到完美匹配: ${record.fileName}');
-              return record.filePath;
+              return absolutePath;
             }
           }
         }

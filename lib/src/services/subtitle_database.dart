@@ -4,9 +4,11 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 /// 字幕文件数据库记录
+///
+/// 数据库只存储相对路径（相对于字幕库根目录），绝对路径在运行时动态拼接。
+/// 这样即使 iOS 重装后沙盒 UUID 变化，或其他平台迁移下载目录，数据库无需更新。
 class SubtitleFileRecord {
   final String fileName;
-  final String filePath;
   final String relativePath;
   final String category;
   final int? workId;
@@ -16,7 +18,6 @@ class SubtitleFileRecord {
 
   SubtitleFileRecord({
     required this.fileName,
-    required this.filePath,
     required this.relativePath,
     required this.category,
     this.workId,
@@ -25,9 +26,13 @@ class SubtitleFileRecord {
     this.normalizedName,
   });
 
+  /// 根据字幕库根目录拼接出绝对路径
+  String absolutePath(String libraryRootPath) {
+    return p.joinAll([libraryRootPath, ...relativePath.split('/')]);
+  }
+
   Map<String, dynamic> toMap() => {
         'file_name': fileName,
-        'file_path': filePath,
         'relative_path': relativePath,
         'category': category,
         'work_id': workId,
@@ -39,7 +44,6 @@ class SubtitleFileRecord {
   factory SubtitleFileRecord.fromMap(Map<String, dynamic> map) {
     return SubtitleFileRecord(
       fileName: map['file_name'] as String,
-      filePath: map['file_path'] as String,
       relativePath: map['relative_path'] as String,
       category: map['category'] as String,
       workId: map['work_id'] as int?,
@@ -76,8 +80,9 @@ class SubtitleDatabase {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _upgradeDB,
     );
   }
 
@@ -86,8 +91,7 @@ class SubtitleDatabase {
       CREATE TABLE subtitle_files (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         file_name TEXT NOT NULL,
-        file_path TEXT NOT NULL UNIQUE,
-        relative_path TEXT NOT NULL,
+        relative_path TEXT NOT NULL UNIQUE,
         category TEXT NOT NULL,
         work_id INTEGER,
         file_size INTEGER DEFAULT 0,
@@ -101,8 +105,6 @@ class SubtitleDatabase {
         'CREATE INDEX idx_files_work_id ON subtitle_files(work_id)');
     await db.execute(
         'CREATE INDEX idx_files_category ON subtitle_files(category)');
-    await db.execute(
-        'CREATE INDEX idx_files_file_path ON subtitle_files(file_path)');
 
     await db.execute('''
       CREATE TABLE library_meta (
@@ -110,6 +112,41 @@ class SubtitleDatabase {
         value TEXT
       )
     ''');
+  }
+
+  Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // v2: 移除 file_path 列，改用 relative_path 作为唯一键
+      // SQLite 不支持直接 DROP COLUMN，需要重建表
+      await db.execute(
+          'ALTER TABLE subtitle_files RENAME TO subtitle_files_old');
+      await db.execute('''
+        CREATE TABLE subtitle_files (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          file_name TEXT NOT NULL,
+          relative_path TEXT NOT NULL UNIQUE,
+          category TEXT NOT NULL,
+          work_id INTEGER,
+          file_size INTEGER DEFAULT 0,
+          modified_at TEXT,
+          normalized_name TEXT,
+          created_at TEXT DEFAULT (datetime('now'))
+        )
+      ''');
+      await db.execute('''
+        INSERT OR REPLACE INTO subtitle_files
+          (file_name, relative_path, category, work_id, file_size,
+           modified_at, normalized_name, created_at)
+        SELECT file_name, relative_path, category, work_id, file_size,
+               modified_at, normalized_name, created_at
+        FROM subtitle_files_old
+      ''');
+      await db.execute('DROP TABLE subtitle_files_old');
+      await db.execute(
+          'CREATE INDEX idx_files_work_id ON subtitle_files(work_id)');
+      await db.execute(
+          'CREATE INDEX idx_files_category ON subtitle_files(category)');
+    }
   }
 
   // ==================== CRUD ====================
@@ -133,67 +170,63 @@ class SubtitleDatabase {
     await batch.commit(noResult: true);
   }
 
-  /// 按文件路径删除
-  Future<int> deleteByPath(String filePath) async {
+  /// 按相对路径删除
+  Future<int> deleteByRelativePath(String relativePath) async {
     final db = await database;
     return await db.delete('subtitle_files',
-        where: 'file_path = ?', whereArgs: [filePath]);
+        where: 'relative_path = ?', whereArgs: [relativePath]);
   }
 
-  /// 按路径前缀删除（用于删除目录下所有文件）
-  Future<int> deleteByPathPrefix(String directoryPath) async {
+  /// 按相对路径前缀删除（用于删除目录下所有文件）
+  Future<int> deleteByRelativePathPrefix(String relativePrefix) async {
     final db = await database;
     // 确保路径以 / 结尾，避免误删同前缀的其他目录
     final prefix =
-        directoryPath.endsWith('/') ? directoryPath : '$directoryPath/';
+        relativePrefix.endsWith('/') ? relativePrefix : '$relativePrefix/';
     return await db.delete('subtitle_files',
-        where: 'file_path LIKE ?', whereArgs: ['$prefix%']);
+        where: 'relative_path LIKE ?', whereArgs: ['$prefix%']);
   }
 
   /// 更新单个文件的路径（重命名）
-  Future<void> updateFilePath(
-    String oldPath,
-    String newFilePath,
+  Future<void> updateRelativePath(
+    String oldRelativePath,
     String newRelativePath,
     String newFileName,
   ) async {
     final db = await database;
+    final newCategory = _extractCategoryFromRelativePath(newRelativePath);
+    final newWorkId = _extractWorkIdFromRelativePath(newRelativePath);
     await db.update(
       'subtitle_files',
       {
-        'file_path': newFilePath,
         'relative_path': newRelativePath,
         'file_name': newFileName,
+        'category': newCategory,
+        'work_id': newWorkId,
       },
-      where: 'file_path = ?',
-      whereArgs: [oldPath],
+      where: 'relative_path = ?',
+      whereArgs: [oldRelativePath],
     );
   }
 
   /// 批量更新目录路径（目录重命名/移动）
-  Future<void> updateDirectoryPaths(
-    String oldDirPath,
-    String newDirPath,
-    String libraryRootPath,
+  Future<void> updateDirectoryRelativePaths(
+    String oldRelativePrefix,
+    String newRelativePrefix,
   ) async {
     final db = await database;
     final oldPrefix =
-        oldDirPath.endsWith('/') ? oldDirPath : '$oldDirPath/';
+        oldRelativePrefix.endsWith('/') ? oldRelativePrefix : '$oldRelativePrefix/';
     final files = await db.query('subtitle_files',
-        where: 'file_path LIKE ?', whereArgs: ['$oldPrefix%']);
+        where: 'relative_path LIKE ?', whereArgs: ['$oldPrefix%']);
 
     if (files.isEmpty) return;
 
     final batch = db.batch();
     for (final file in files) {
-      final oldFilePath = file['file_path'] as String;
-      final newFilePath = oldFilePath.replaceFirst(oldDirPath, newDirPath);
-      var newRelativePath =
-          newFilePath.substring(libraryRootPath.length + 1);
-      // 统一用 / 存储相对路径
-      if (Platform.isWindows) {
-        newRelativePath = newRelativePath.replaceAll('\\', '/');
-      }
+      final oldRelativePath = file['relative_path'] as String;
+      final newRelativePath =
+          oldRelativePath.replaceFirst(oldRelativePrefix, newRelativePrefix);
       final parts = newRelativePath.split('/');
       final newCategory = parts.isNotEmpty ? parts.first : '';
       final newWorkId = _extractWorkIdFromRelativePath(newRelativePath);
@@ -201,7 +234,6 @@ class SubtitleDatabase {
       batch.update(
         'subtitle_files',
         {
-          'file_path': newFilePath,
           'relative_path': newRelativePath,
           'category': newCategory,
           'work_id': newWorkId,
@@ -331,6 +363,15 @@ class SubtitleDatabase {
   // ==================== 工具方法 ====================
 
   static final _workIdRegex = RegExp(r'[RrBbVv][Jj]0*(\d+)');
+
+  /// 从相对路径提取分类（第一级目录）
+  static String _extractCategoryFromRelativePath(String relativePath) {
+    final firstSlash = relativePath.indexOf('/');
+    if (firstSlash > 0) {
+      return relativePath.substring(0, firstSlash);
+    }
+    return '';
+  }
 
   /// 从相对路径提取 workId
   static int? _extractWorkIdFromRelativePath(String relativePath) {

@@ -344,7 +344,6 @@ class SubtitleLibraryService {
 
               records.add(SubtitleFileRecord(
                 fileName: fileName,
-                filePath: entity.path,
                 relativePath: relativePath,
                 category: category,
                 workId: workId,
@@ -373,9 +372,18 @@ class SubtitleLibraryService {
   /// 同步单个目录到数据库（删除旧记录 + 重新扫描）
   static Future<void> _syncDirectoryToDatabase(String directoryPath) async {
     final libraryDir = await getSubtitleLibraryDirectory();
+    final libraryRoot = libraryDir.path;
+
+    // 将绝对路径转换为相对路径前缀
+    final relativePrefix = directoryPath.length > libraryRoot.length
+        ? _toRelativePath(directoryPath.substring(libraryRoot.length + 1))
+        : '';
 
     // 删除该目录下的旧记录
-    await SubtitleDatabase.instance.deleteByPathPrefix(directoryPath);
+    if (relativePrefix.isNotEmpty) {
+      await SubtitleDatabase.instance
+          .deleteByRelativePathPrefix(relativePrefix);
+    }
 
     // 如果目录仍存在，重新扫描并插入
     final dir = Directory(directoryPath);
@@ -413,7 +421,6 @@ class SubtitleLibraryService {
 
         records.add(SubtitleFileRecord(
           fileName: fileName,
-          filePath: filePath,
           relativePath: relativePath,
           category: category,
           workId: workId,
@@ -506,7 +513,7 @@ class SubtitleLibraryService {
         '_meta': {
           'type': 'text',
           'title': fileName,
-          'path': record['file_path'] as String,
+          'path': '$currentFullPath${Platform.pathSeparator}$fileName',
           'size': record['file_size'] as int?,
           'modified': record['modified_at'] as String?,
         },
